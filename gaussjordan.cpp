@@ -8,25 +8,43 @@ void gaussJordan(vector<vector<double> >& A, vector<double>& B, vector<double>& 
         A[i].push_back(B[i]);
     }
 
-    for (int i = 0; i < n; i++) {
+    int i = 0;
+    int iterationCount = 0;
+    while (i < n) {
+        iterationCount++;
         double pivot = A[i][i];
-        for (int j = 0; j < n + 1; j++) {
-            A[i][j] /= pivot;
+
+        if (pivot == 0) {
+            cout << "Pivot element is zero, cannot proceed with Gauss-Jordan elimination." << endl;
+            return;
         }
 
-        for (int j = 0; j < n; j++) {
+        int j = 0;
+        while (j < n + 1) {
+            A[i][j] /= pivot;
+            j++;
+        }
+
+        j = 0;
+        while (j < n) {
             if (i != j) {
                 double factor = A[j][i];
-                for (int k = 0; k < n + 1; k++) {
+                int k = 0;
+                while (k < n + 1) {
                     A[j][k] -= factor * A[i][k];
+                    k++;
                 }
             }
+            j++;
         }
+        i++;
     }
 
     for (int i = 0; i < n; i++) {
         X[i] = A[i][n];
     }
+
+    cout << "Number of iterations: " << iterationCount << endl;
 }
 
 int main() {
@@ -50,7 +68,9 @@ int main() {
     }
 
     vector<double> X(n, 0);
-    double e = 1e-4;
+    double e;
+    cout << "Enter the tolerance value (e): ";
+    cin >> e;
 
     gaussJordan(A, B, X, e);
 
